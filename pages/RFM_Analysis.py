@@ -86,6 +86,9 @@ fig3 = px.histogram(
 chart_box(fig3, "📦 Frequency Distribution")
 
 # ================= 4. SEGMENTS =================
+import plotly.express as px
+
+# Segment function
 def segment(x):
     if x > 50000:
         return "High Value"
@@ -94,12 +97,19 @@ def segment(x):
     else:
         return "Low"
 
+# Apply segmentation
 rfm_table["Segment"] = rfm_table["Monetary"].apply(segment)
 
+# Count for pie chart (IMPORTANT FIX)
+segment_counts = rfm_table["Segment"].value_counts().reset_index()
+segment_counts.columns = ["Segment", "Count"]
+
+# Pie chart
 fig4 = px.pie(
-    rfm_table,
+    segment_counts,
     names="Segment",
+    values="Count",
     title="Customer Segments"
 )
 
-chart_box(fig4, "🎯 Customer Segments")
+st.plotly_chart(fig4, use_container_width=True)
